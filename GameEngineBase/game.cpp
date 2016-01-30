@@ -10,14 +10,21 @@ game::game() {
 
 	boost::shared_ptr<tile> t1 (new tile(TS * 5, TS * 5, TS, TS, true, ""));
 	boost::shared_ptr<player> pl(new player(TS * 4, TS * 4, TS, TS));
+	boost::shared_ptr<computer> terminal(new computer());
 	bouncer *b1 = new bouncer(TS, TS * 4);
+	
+	terminal->setX(1 * TS);
+	terminal->setY(3 * TS);
+	terminal->setWidth(TS);
+	terminal->setHeight(TS);
+	printf("%s\n", gluErrorString(glGetError()));
 
-	//ground->setTexture("love.bmp");
 	pl->setVariables(TS * 2, TS * 4, TS, TS, 255, 255, 255, 255, false, "items.png", 0, 0, 16, 1);
 
 	pl->enableObjs(this->objects);
 	this->ply = pl;
 
+	this->objects.push_back(terminal);
 	this->objects.push_back(pl);
 
 }

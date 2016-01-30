@@ -12,7 +12,7 @@ tile::tile(float x, float y, float width, float height, bool collides, std::stri
 }
 
 tile::tile(float x, float y, float width, float height, bool collides, std::string texture, int spriteX, int spriteY, int spriteSize, int spriteOffset) {
-	setVariables(x, y, width, height, 255, 255, 255, 255, collides, texture, spriteX, spriteY, spriteSize, spriteOffset);
+	this->setVariables(x, y, width, height, 255, 255, 255, 255, collides, texture, spriteX, spriteY, spriteSize, spriteOffset);
 }
 
 tile::~tile() {}

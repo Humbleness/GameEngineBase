@@ -52,6 +52,7 @@ void gameObject::setWidth(float w) { this->w = w; }
 void gameObject::setHeight(float h) { this->h = h; }
 void gameObject::setColor(float r, float g, float b, float a) { this->r = r; this->g = g; this->b = b; this->a = a; }
 void gameObject::setCollides(bool collisionEnabled) { this->collisionEnabled = collisionEnabled; }
+void gameObject::setOpaque(bool opaque) { this->opaque = opaque; }
 
 void gameObject::setTexture(std::string path) {
 	this->texturePath = path;
@@ -164,5 +165,6 @@ int gameObject::getSpriteX() { return this->spriteX; }
 int gameObject::getSpriteY() { return this->spriteY; }
 int gameObject::getSpriteSize() { return this->spriteSize; }
 int gameObject::getSpriteOffset() { return this->spriteOffset; }
+bool gameObject::getOpaque() { return this->opaque; }
 
 gameObject::~gameObject() {}

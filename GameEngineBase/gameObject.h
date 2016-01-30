@@ -23,6 +23,8 @@ protected:
 	std::string texturePath = "";
 	GLuint texture = NULL;
 
+	bool opaque = false;
+
 	int spriteX = -1;
 	int spriteY = -1;
 	int spriteSize = -1;
@@ -63,6 +65,8 @@ public:
 	void setSpriteY(int y);
 	void setSpriteSize(int size);
 	void setSpriteOffset(int offset);
+	// set whether or not this object will cast a shadow
+	void setOpaque(bool opaque);
 
 	void render();
 
@@ -94,6 +98,7 @@ public:
 	int getSpriteY();
 	int getSpriteSize();
 	int getSpriteOffset();
+	bool getOpaque();
 
 	~gameObject();
 };

@@ -18,6 +18,7 @@
 #include "loadTexture.h"
 #include "bouncer.h"
 #include "tileLoader.h"
+#include "computer.h"
 
 
 
