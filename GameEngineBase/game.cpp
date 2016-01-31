@@ -104,283 +104,270 @@ void game::blockVision(boost::shared_ptr<gameObject> obj) {
 	float scrX = 0;
 	float scrY = 0;
 
-	//// find the player object
-	//for (int i = 0; i < (int)this->objects.size(); i++) {
-	//	boost::shared_ptr<gameObject> obj = this->objects.at(i);
-	//	if (typeid(*obj) == typeid(player)) {
-	//		ply = obj;
-	//		break;
-	//	}
-	//}
+	if (typeid(*obj) == typeid(tile)) {
+		if (obj->getOpaque()) {
+			// four corners of the tile
+			float y1 = obj->getY();
+			float y2 = obj->getY() + obj->getH();
+			float x1 = obj->getX();
+			float x2 = obj->getX() + obj->getW();
 
-	// use two loops over the same vector cause i dont give a fuck
-	//for (int i = 0; i < (int)this->objects.size(); i++) {
-		//boost::shared_ptr<gameObject> obj = this->objects.at(i);
-		if (typeid(*obj) == typeid(tile)) {
-			if (obj->collides()) {
-				// four corners of the tile
-				float y1 = obj->getY();
-				float y2 = obj->getY() + obj->getH();
-				float x1 = obj->getX();
-				float x2 = obj->getX() + obj->getW();
-
-				float x3 = 0;
-				float y3 = 0;
-				float x4 = 0;
-				float y4 = 0;
+			float x3 = 0;
+			float y3 = 0;
+			float x4 = 0;
+			float y4 = 0;
 
 
-				// the center x of the player
-				float plyCX = ply->getX() + (ply->getW() / 2);
-				// the center y of the player
-				float plyCY = ply->getY() + (ply->getH() / 2) + (game::TS()/80 * 32);
+			// the center x of the player
+			float plyCX = ply->getX() + (ply->getW() / 2);
+			// the center y of the player
+			float plyCY = ply->getY() + (ply->getH() / 2) + (game::TS()/80 * 32);
 
-				// and this is 10/10 how you get rid of divide by zero errors
-				if (plyCX == 0) plyCX = 0.1f;
-				if (plyCY == 0) plyCY = 0.1f;
+			// and this is 10/10 how you get rid of divide by zero errors
+			if (plyCX == 0) plyCX = 0.1f;
+			if (plyCY == 0) plyCY = 0.1f;
 
-				// tile is to the bottem left
-				if (plyCX > x2 && plyCY > y2) {
-					// length between corner and player
-					float lenPlyX3 = x2 - plyCX;
-					lenPlyX3 = lenPlyX3 == 0 ? .01 : lenPlyX3;
-					float lenPlyY3 = y1 - plyCY;
-					lenPlyY3 = lenPlyY3 == 0 ? .01 : lenPlyY3;
-					// length between corner and edge of screen
-					float lenScrX3 = scrX - x2;
-					float lenScrY3 = scrY - y1;
-					// get the ratio between the two lengths
-					float lenCoord3 = lenScrX3 / lenPlyX3;
+			// tile is to the bottem left
+			if (plyCX > x2 && plyCY > y2) {
+				// length between corner and player
+				float lenPlyX3 = x2 - plyCX;
+				lenPlyX3 = lenPlyX3 == 0 ? .01 : lenPlyX3;
+				float lenPlyY3 = y1 - plyCY;
+				lenPlyY3 = lenPlyY3 == 0 ? .01 : lenPlyY3;
+				// length between corner and edge of screen
+				float lenScrX3 = scrX - x2;
+				float lenScrY3 = scrY - y1;
+				// get the ratio between the two lengths
+				float lenCoord3 = lenScrX3 / lenPlyX3;
 
-					// repeat with fourth set of coordinates
-					float lenPlyX4 = x1 - plyCX;
-					lenPlyX4 = lenPlyX4 == 0 ? .01 : lenPlyX4;
-					float lenPlyY4 = y2 - plyCY;
-					lenPlyY4 = lenPlyY4 == 0 ? .01 : lenPlyY4;
-					float lenScrX4 = scrX - x1;
-					float lenScrY4 = scrY - y2;
-					float lenCoord4 = lenScrX4 / lenPlyX4;
+				// repeat with fourth set of coordinates
+				float lenPlyX4 = x1 - plyCX;
+				lenPlyX4 = lenPlyX4 == 0 ? .01 : lenPlyX4;
+				float lenPlyY4 = y2 - plyCY;
+				lenPlyY4 = lenPlyY4 == 0 ? .01 : lenPlyY4;
+				float lenScrX4 = scrX - x1;
+				float lenScrY4 = scrY - y2;
+				float lenCoord4 = lenScrX4 / lenPlyX4;
 
-					x3 = (plyCX + ((x2 - plyCX) * (1 + lenCoord3)));
-					y3 = (plyCY + ((y1 - plyCY) * (1 + lenCoord3)));
-					x4 = (plyCX + ((x1 - plyCX) * (1 + lenCoord4)));
-					y4 = (plyCY + ((y2 - plyCY) * (1 + lenCoord4)));
+				x3 = (plyCX + ((x2 - plyCX) * (1 + lenCoord3)));
+				y3 = (plyCY + ((y1 - plyCY) * (1 + lenCoord3)));
+				x4 = (plyCX + ((x1 - plyCX) * (1 + lenCoord4)));
+				y4 = (plyCY + ((y2 - plyCY) * (1 + lenCoord4)));
 
-					draw::polygon(x1, y2, x2, y1, x3, y3, x4, y4, 0, 0, 0, 255);
-				}
+				draw::polygon(x1, y2, x2, y1, x3, y3, x4, y4, 0, 0, 0, 255);
+			}
 
-				// tile is to the top left
-				else if (plyCX > x2 && plyCY < y1) {
-					// length between corner and player
-					float lenPlyX3 = x1 - plyCX;
-					lenPlyX3 = lenPlyX3 == 0 ? .01 : lenPlyX3;
-					float lenPlyY3 = y1 - plyCY;
-					lenPlyY3 = lenPlyY3 == 0 ? .01 : lenPlyY3;
-					// length between corner and edge of screen
-					float lenScrX3 = scrX - x1;
-					float lenScrY3 = scrY - y1;
-					// get the ratio between the two lengths
-					float lenCoord3 = lenScrX3 / lenPlyX3;
+			// tile is to the top left
+			else if (plyCX > x2 && plyCY < y1) {
+				// length between corner and player
+				float lenPlyX3 = x1 - plyCX;
+				lenPlyX3 = lenPlyX3 == 0 ? .01 : lenPlyX3;
+				float lenPlyY3 = y1 - plyCY;
+				lenPlyY3 = lenPlyY3 == 0 ? .01 : lenPlyY3;
+				// length between corner and edge of screen
+				float lenScrX3 = scrX - x1;
+				float lenScrY3 = scrY - y1;
+				// get the ratio between the two lengths
+				float lenCoord3 = lenScrX3 / lenPlyX3;
 
-					// repeat with fourth set of coordinates
-					float lenPlyX4 = x2 - plyCX;// -x2;
-					lenPlyX4 = lenPlyX4 == 0 ? .01 : lenPlyX4;
-					float lenPlyY4 = y2 - plyCY;// -y2;
-					lenPlyY4 = lenPlyY4 == 0 ? .01 : lenPlyY4;
-					float lenScrX4 = scrX - x2;
-					float lenScrY4 = scrY - y2;
-					float lenCoord4 = lenScrX4 / lenPlyX4;
+				// repeat with fourth set of coordinates
+				float lenPlyX4 = x2 - plyCX;// -x2;
+				lenPlyX4 = lenPlyX4 == 0 ? .01 : lenPlyX4;
+				float lenPlyY4 = y2 - plyCY;// -y2;
+				lenPlyY4 = lenPlyY4 == 0 ? .01 : lenPlyY4;
+				float lenScrX4 = scrX - x2;
+				float lenScrY4 = scrY - y2;
+				float lenCoord4 = lenScrX4 / lenPlyX4;
 
-					x3 = (plyCX + ((x1 - plyCX) * (1 + lenCoord3)));
-					y3 = (plyCY + ((y1 - plyCY) * (1 + lenCoord3)));
-					x4 = (plyCX + ((x2 - plyCX) * (1 + lenCoord4)));
-					y4 = (plyCY + ((y2 - plyCY) * (1 + lenCoord4)));
+				x3 = (plyCX + ((x1 - plyCX) * (1 + lenCoord3)));
+				y3 = (plyCY + ((y1 - plyCY) * (1 + lenCoord3)));
+				x4 = (plyCX + ((x2 - plyCX) * (1 + lenCoord4)));
+				y4 = (plyCY + ((y2 - plyCY) * (1 + lenCoord4)));
 
-					draw::polygon(x2, y2, x1, y1, x3, y3, x4, y4, 0, 0, 0, 255);
-				}
+				draw::polygon(x2, y2, x1, y1, x3, y3, x4, y4, 0, 0, 0, 255);
+			}
 
-				// tile is to the top right
-				else if (plyCX < x1 && plyCY < y1) {
-					// length between corner and player
-					float lenPlyX3 = x2 - plyCX;
-					lenPlyX3 = lenPlyX3 == 0 ? .01 : lenPlyX3;
-					float lenPlyY3 = y1 - plyCY;
-					lenPlyY3 = lenPlyY3 == 0 ? .01 : lenPlyY3;
-					// length between corner and edge of screen
-					float lenScrX3 = scrW - x2;
-					float lenScrY3 = scrH - y1;
-					// get the ratio between the two lengths
-					float lenCoord3 = lenScrX3 / lenPlyX3;
+			// tile is to the top right
+			else if (plyCX < x1 && plyCY < y1) {
+				// length between corner and player
+				float lenPlyX3 = x2 - plyCX;
+				lenPlyX3 = lenPlyX3 == 0 ? .01 : lenPlyX3;
+				float lenPlyY3 = y1 - plyCY;
+				lenPlyY3 = lenPlyY3 == 0 ? .01 : lenPlyY3;
+				// length between corner and edge of screen
+				float lenScrX3 = scrW - x2;
+				float lenScrY3 = scrH - y1;
+				// get the ratio between the two lengths
+				float lenCoord3 = lenScrX3 / lenPlyX3;
 
-					// repeat with fourth set of coordinates
-					float lenPlyX4 = x1 - plyCX;
-					lenPlyX4 = lenPlyX4 == 0 ? .01 : lenPlyX4;
-					float lenPlyY4 = y2 - plyCY;
-					lenPlyY4 = lenPlyY4 == 0 ? .01 : lenPlyY4;
-					float lenScrX4 = scrW - x1;
-					float lenScrY4 = scrH - y2;
-					float lenCoord4 = lenScrX4 / lenPlyX4;
+				// repeat with fourth set of coordinates
+				float lenPlyX4 = x1 - plyCX;
+				lenPlyX4 = lenPlyX4 == 0 ? .01 : lenPlyX4;
+				float lenPlyY4 = y2 - plyCY;
+				lenPlyY4 = lenPlyY4 == 0 ? .01 : lenPlyY4;
+				float lenScrX4 = scrW - x1;
+				float lenScrY4 = scrH - y2;
+				float lenCoord4 = lenScrX4 / lenPlyX4;
 
-					x3 = (plyCX + ((x2 - plyCX) * (1 + lenCoord3)));
-					y3 = (plyCY + ((y1 - plyCY) * (1 + lenCoord3)));
-					x4 = (plyCX + ((x1 - plyCX) * (1 + lenCoord4)));
-					y4 = (plyCY + ((y2 - plyCY) * (1 + lenCoord4)));
+				x3 = (plyCX + ((x2 - plyCX) * (1 + lenCoord3)));
+				y3 = (plyCY + ((y1 - plyCY) * (1 + lenCoord3)));
+				x4 = (plyCX + ((x1 - plyCX) * (1 + lenCoord4)));
+				y4 = (plyCY + ((y2 - plyCY) * (1 + lenCoord4)));
 
-					draw::polygon(x1, y2, x2, y1, x3, y3, x4, y4, 0, 0, 0, 255);
-				}
+				draw::polygon(x1, y2, x2, y1, x3, y3, x4, y4, 0, 0, 0, 255);
+			}
 
-				// tile is bottem right
-				else if (plyCX < x1 && plyCY > y2) {
-					// length between corner and player
-					float lenPlyX3 = x2 - plyCX;
-					lenPlyX3 = lenPlyX3 == 0 ? .01 : lenPlyX3;
-					float lenPlyY3 = y2 - plyCY;
-					lenPlyY3 = lenPlyY3 == 0 ? .01 : lenPlyY3;
-					// length between corner and edge of screen
-					float lenScrX3 = scrW - x2;
-					float lenScrY3 = scrH - y2;
-					// get the ratio between the two lengths
-					float lenCoord3 = lenScrX3 / lenPlyX3;
+			// tile is bottem right
+			else if (plyCX < x1 && plyCY > y2) {
+				// length between corner and player
+				float lenPlyX3 = x2 - plyCX;
+				lenPlyX3 = lenPlyX3 == 0 ? .01 : lenPlyX3;
+				float lenPlyY3 = y2 - plyCY;
+				lenPlyY3 = lenPlyY3 == 0 ? .01 : lenPlyY3;
+				// length between corner and edge of screen
+				float lenScrX3 = scrW - x2;
+				float lenScrY3 = scrH - y2;
+				// get the ratio between the two lengths
+				float lenCoord3 = lenScrX3 / lenPlyX3;
 
-					// repeat with fourth set of coordinates
-					float lenPlyX4 = x1 - plyCX;
-					lenPlyX4 = lenPlyX4 == 0 ? .01 : lenPlyX4;
-					float lenPlyY4 = y1 - plyCY;
-					lenPlyY4 = lenPlyY4 == 0 ? .01 : lenPlyY4;
-					float lenScrX4 = scrW - x1;
-					float lenScrY4 = scrH - y1;
-					float lenCoord4 = lenScrX4 / lenPlyX4;
+				// repeat with fourth set of coordinates
+				float lenPlyX4 = x1 - plyCX;
+				lenPlyX4 = lenPlyX4 == 0 ? .01 : lenPlyX4;
+				float lenPlyY4 = y1 - plyCY;
+				lenPlyY4 = lenPlyY4 == 0 ? .01 : lenPlyY4;
+				float lenScrX4 = scrW - x1;
+				float lenScrY4 = scrH - y1;
+				float lenCoord4 = lenScrX4 / lenPlyX4;
 
-					x3 = (plyCX + ((x2 - plyCX) * (1 + lenCoord3)));
-					y3 = (plyCY + ((y2 - plyCY) * (1 + lenCoord3)));
-					x4 = (plyCX + ((x1 - plyCX) * (1 + lenCoord4)));
-					y4 = (plyCY + ((y1 - plyCY) * (1 + lenCoord4)));
+				x3 = (plyCX + ((x2 - plyCX) * (1 + lenCoord3)));
+				y3 = (plyCY + ((y2 - plyCY) * (1 + lenCoord3)));
+				x4 = (plyCX + ((x1 - plyCX) * (1 + lenCoord4)));
+				y4 = (plyCY + ((y1 - plyCY) * (1 + lenCoord4)));
 
-					draw::polygon(x1, y1, x2, y2, x3, y3, x4, y4, 0, 0, 0, 255);
-				}
+				draw::polygon(x1, y1, x2, y2, x3, y3, x4, y4, 0, 0, 0, 255);
+			}
 
-				// tile is left
-				else if ((plyCX > x2 && plyCY <= y2) && (plyCX > x2 && plyCY > y1)) {
-					// length between corner and player
-					float lenPlyX3 = x2 - plyCX;
-					lenPlyX3 = lenPlyX3 == 0 ? .01 : lenPlyX3;
-					float lenPlyY3 = y1 - plyCY;
-					lenPlyY3 = lenPlyY3 == 0 ? .01 : lenPlyY3;
-					// length between corner and edge of screen
-					float lenScrX3 = scrX - x2;
-					float lenScrY3 = scrY - y1;
-					// get the ratio between the two lengths
-					float lenCoord3 = lenScrX3 / lenPlyX3;
+			// tile is left
+			else if ((plyCX > x2 && plyCY <= y2) && (plyCX > x2 && plyCY > y1)) {
+				// length between corner and player
+				float lenPlyX3 = x2 - plyCX;
+				lenPlyX3 = lenPlyX3 == 0 ? .01 : lenPlyX3;
+				float lenPlyY3 = y1 - plyCY;
+				lenPlyY3 = lenPlyY3 == 0 ? .01 : lenPlyY3;
+				// length between corner and edge of screen
+				float lenScrX3 = scrX - x2;
+				float lenScrY3 = scrY - y1;
+				// get the ratio between the two lengths
+				float lenCoord3 = lenScrX3 / lenPlyX3;
 
-					// repeat with fourth set of coordinates
-					float lenPlyX4 = x2 - plyCX;
-					lenPlyX4 = lenPlyX4 == 0 ? .01 : lenPlyX4;
-					float lenPlyY4 = y2 - plyCY;
-					lenPlyY4 = lenPlyY4 == 0 ? .01 : lenPlyY4;
-					float lenScrX4 = scrX - x2;
-					float lenScrY4 = scrY - y2;
-					float lenCoord4 = lenScrX4 / lenPlyX4;
+				// repeat with fourth set of coordinates
+				float lenPlyX4 = x2 - plyCX;
+				lenPlyX4 = lenPlyX4 == 0 ? .01 : lenPlyX4;
+				float lenPlyY4 = y2 - plyCY;
+				lenPlyY4 = lenPlyY4 == 0 ? .01 : lenPlyY4;
+				float lenScrX4 = scrX - x2;
+				float lenScrY4 = scrY - y2;
+				float lenCoord4 = lenScrX4 / lenPlyX4;
 
-					x3 = (plyCX + ((x2 - plyCX) * (1 + lenCoord3)));
-					y3 = (plyCY + ((y1 - plyCY) * (1 + lenCoord3)));
-					x4 = (plyCX + ((x2 - plyCX) * (1 + lenCoord4)));
-					y4 = (plyCY + ((y2 - plyCY) * (1 + lenCoord4)));
+				x3 = (plyCX + ((x2 - plyCX) * (1 + lenCoord3)));
+				y3 = (plyCY + ((y1 - plyCY) * (1 + lenCoord3)));
+				x4 = (plyCX + ((x2 - plyCX) * (1 + lenCoord4)));
+				y4 = (plyCY + ((y2 - plyCY) * (1 + lenCoord4)));
 
-					draw::polygon(x2, y2, x2, y1, x3, y3, x4, y4, 0, 0, 0, 255);
-				}
+				draw::polygon(x2, y2, x2, y1, x3, y3, x4, y4, 0, 0, 0, 255);
+			}
 
-				// tile is above
-				else if ((plyCX >= x1 && plyCY < y1) && (plyCX <= x2 && plyCY < y1)) {
-					// length between corner and player
-					float lenPlyX3 = x1 - plyCX;
-					lenPlyX3 = lenPlyX3 == 0 ? .01 : lenPlyX3;
-					float lenPlyY3 = y1 - plyCY;
-					lenPlyY3 = lenPlyY3 == 0 ? .01 : lenPlyY3;
-					// length between corner and edge of screen
-					float lenScrX3 = scrW - x1;
-					float lenScrY3 = scrH - y1;
-					// get the ratio between the two lengths
-					float lenCoord3 = lenScrY3 / lenPlyY3;
+			// tile is above
+			else if ((plyCX >= x1 && plyCY < y1) && (plyCX <= x2 && plyCY < y1)) {
+				// length between corner and player
+				float lenPlyX3 = x1 - plyCX;
+				lenPlyX3 = lenPlyX3 == 0 ? .01 : lenPlyX3;
+				float lenPlyY3 = y1 - plyCY;
+				lenPlyY3 = lenPlyY3 == 0 ? .01 : lenPlyY3;
+				// length between corner and edge of screen
+				float lenScrX3 = scrW - x1;
+				float lenScrY3 = scrH - y1;
+				// get the ratio between the two lengths
+				float lenCoord3 = lenScrY3 / lenPlyY3;
 
-					// repeat with fourth set of coordinates
-					float lenPlyX4 = x2 - plyCX;
-					lenPlyX4 = lenPlyX4 == 0 ? .01 : lenPlyX4;
-					float lenPlyY4 = y1 - plyCY;
-					lenPlyY4 = lenPlyY4 == 0 ? .01 : lenPlyY4;
-					float lenScrX4 = scrW - x2;
-					float lenScrY4 = scrH - y1;
-					float lenCoord4 = lenScrY4 / lenPlyY4;
+				// repeat with fourth set of coordinates
+				float lenPlyX4 = x2 - plyCX;
+				lenPlyX4 = lenPlyX4 == 0 ? .01 : lenPlyX4;
+				float lenPlyY4 = y1 - plyCY;
+				lenPlyY4 = lenPlyY4 == 0 ? .01 : lenPlyY4;
+				float lenScrX4 = scrW - x2;
+				float lenScrY4 = scrH - y1;
+				float lenCoord4 = lenScrY4 / lenPlyY4;
 
-					x3 = (plyCX + ((x1 - plyCX) * (1 + lenCoord3)));
-					y3 = (plyCY + ((y1 - plyCY) * (1 + lenCoord3)));
-					x4 = (plyCX + ((x2 - plyCX) * (1 + lenCoord4)));
-					y4 = (plyCY + ((y1 - plyCY) * (1 + lenCoord4)));
+				x3 = (plyCX + ((x1 - plyCX) * (1 + lenCoord3)));
+				y3 = (plyCY + ((y1 - plyCY) * (1 + lenCoord3)));
+				x4 = (plyCX + ((x2 - plyCX) * (1 + lenCoord4)));
+				y4 = (plyCY + ((y1 - plyCY) * (1 + lenCoord4)));
 
-					draw::polygon(x2, y1, x1, y1, x3, y3, x4, y4, 0, 0, 0, 255);
-				}
+				draw::polygon(x2, y1, x1, y1, x3, y3, x4, y4, 0, 0, 0, 255);
+			}
 
-				// tile is right
-				else if ((plyCX < x1 && plyCY <= y2) && (plyCX < x2 && plyCY >= y1)) {
-					// length between corner and player
-					float lenPlyX3 = x1 - plyCX;
-					lenPlyX3 = lenPlyX3 == 0 ? .01 : lenPlyX3;
-					float lenPlyY3 = y2 - plyCY;
-					lenPlyY3 = lenPlyY3 == 0 ? .01 : lenPlyY3;
-					// length between corner and edge of screen
-					float lenScrX3 = scrW - x1;
-					float lenScrY3 = scrH - y2;
-					// get the ratio between the two lengths
-					float lenCoord3 = lenScrX3 / lenPlyX3;
+			// tile is right
+			else if ((plyCX < x1 && plyCY <= y2) && (plyCX < x2 && plyCY >= y1)) {
+				// length between corner and player
+				float lenPlyX3 = x1 - plyCX;
+				lenPlyX3 = lenPlyX3 == 0 ? .01 : lenPlyX3;
+				float lenPlyY3 = y2 - plyCY;
+				lenPlyY3 = lenPlyY3 == 0 ? .01 : lenPlyY3;
+				// length between corner and edge of screen
+				float lenScrX3 = scrW - x1;
+				float lenScrY3 = scrH - y2;
+				// get the ratio between the two lengths
+				float lenCoord3 = lenScrX3 / lenPlyX3;
 
-					// repeat with fourth set of coordinates
-					float lenPlyX4 = x1 - plyCX;
-					lenPlyX4 = lenPlyX4 == 0 ? .01 : lenPlyX4;
-					float lenPlyY4 = y1 - plyCY;
-					lenPlyY4 = lenPlyY4 == 0 ? .01 : lenPlyY4;
-					float lenScrX4 = scrW - x1;
-					float lenScrY4 = scrH - y1;
-					float lenCoord4 = lenScrX4 / lenPlyX4;
+				// repeat with fourth set of coordinates
+				float lenPlyX4 = x1 - plyCX;
+				lenPlyX4 = lenPlyX4 == 0 ? .01 : lenPlyX4;
+				float lenPlyY4 = y1 - plyCY;
+				lenPlyY4 = lenPlyY4 == 0 ? .01 : lenPlyY4;
+				float lenScrX4 = scrW - x1;
+				float lenScrY4 = scrH - y1;
+				float lenCoord4 = lenScrX4 / lenPlyX4;
 
-					x3 = (plyCX + ((x1 - plyCX) * (1 + lenCoord3)));
-					y3 = (plyCY + ((y2 - plyCY) * (1 + lenCoord3)));
-					x4 = (plyCX + ((x1 - plyCX) * (1 + lenCoord4)));
-					y4 = (plyCY + ((y1 - plyCY) * (1 + lenCoord4)));
+				x3 = (plyCX + ((x1 - plyCX) * (1 + lenCoord3)));
+				y3 = (plyCY + ((y2 - plyCY) * (1 + lenCoord3)));
+				x4 = (plyCX + ((x1 - plyCX) * (1 + lenCoord4)));
+				y4 = (plyCY + ((y1 - plyCY) * (1 + lenCoord4)));
 
-					draw::polygon(x1, y1, x1, y2, x3, y3, x4, y4, 0, 0, 0, 255);
-				}
+				draw::polygon(x1, y1, x1, y2, x3, y3, x4, y4, 0, 0, 0, 255);
+			}
 
-				// tile is underneath
-				else if ((plyCX >= x1 && plyCY > y2) && (plyCX <= x2 && plyCY > y2)) {
-					// length between corner and player
-					float lenPlyX3 = x2 - plyCX;
-					lenPlyX3 = lenPlyX3 == 0 ? .01 : lenPlyX3;
-					float lenPlyY3 = y2 - plyCY;
-					lenPlyY3 = lenPlyY3 == 0 ? .01 : lenPlyY3;
-					// length between corner and edge of screen
-					float lenScrX3 = scrX - x2;
-					float lenScrY3 = scrY - y2;
-					// get the ratio between the two lengths
-					float lenCoord3 = lenScrY3 / lenPlyY3;
+			// tile is underneath
+			else if ((plyCX >= x1 && plyCY > y2) && (plyCX <= x2 && plyCY > y2)) {
+				// length between corner and player
+				float lenPlyX3 = x2 - plyCX;
+				lenPlyX3 = lenPlyX3 == 0 ? .01 : lenPlyX3;
+				float lenPlyY3 = y2 - plyCY;
+				lenPlyY3 = lenPlyY3 == 0 ? .01 : lenPlyY3;
+				// length between corner and edge of screen
+				float lenScrX3 = scrX - x2;
+				float lenScrY3 = scrY - y2;
+				// get the ratio between the two lengths
+				float lenCoord3 = lenScrY3 / lenPlyY3;
 
-					// repeat with fourth set of coordinates
-					float lenPlyX4 = x1 - plyCX;
-					lenPlyX4 = lenPlyX4 == 0 ? .01 : lenPlyX4;
-					float lenPlyY4 = y2 - plyCY;
-					lenPlyY4 = lenPlyY4 == 0 ? .01 : lenPlyY4;
-					float lenScrX4 = scrX - x1;
-					float lenScrY4 = scrY - y2;
-					float lenCoord4 = lenScrY4 / lenPlyY4;
+				// repeat with fourth set of coordinates
+				float lenPlyX4 = x1 - plyCX;
+				lenPlyX4 = lenPlyX4 == 0 ? .01 : lenPlyX4;
+				float lenPlyY4 = y2 - plyCY;
+				lenPlyY4 = lenPlyY4 == 0 ? .01 : lenPlyY4;
+				float lenScrX4 = scrX - x1;
+				float lenScrY4 = scrY - y2;
+				float lenCoord4 = lenScrY4 / lenPlyY4;
 
-					x3 = (plyCX + ((x2 - plyCX) * (1 + lenCoord3)));
-					y3 = (plyCY + ((y2 - plyCY) * (1 + lenCoord3)));
-					x4 = (plyCX + ((x1 - plyCX) * (1 + lenCoord4)));
-					y4 = (plyCY + ((y2 - plyCY) * (1 + lenCoord4)));
+				x3 = (plyCX + ((x2 - plyCX) * (1 + lenCoord3)));
+				y3 = (plyCY + ((y2 - plyCY) * (1 + lenCoord3)));
+				x4 = (plyCX + ((x1 - plyCX) * (1 + lenCoord4)));
+				y4 = (plyCY + ((y2 - plyCY) * (1 + lenCoord4)));
 
-					draw::polygon(x1, y2, x2, y2, x3, y3, x4, y4, 0, 0, 0, 255);
-				}
+				draw::polygon(x1, y2, x2, y2, x3, y3, x4, y4, 0, 0, 0, 255);
 			}
 		}
-	//}
+	}
 }
 
 

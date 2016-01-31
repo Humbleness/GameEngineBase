@@ -97,6 +97,7 @@ std::vector<boost::shared_ptr<gameObject>> tileLoader::loadTiles(std::vector<boo
 					t->setHeight(TS);
 					t->setTexture(spriteSheet, 1, 0, 16, 1);
 					t->setCollides(true);
+					t->setOpaque(true);
 
 					tiles.insert(tiles.begin(), t);
 				}

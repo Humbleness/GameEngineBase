@@ -1,11 +1,15 @@
 #pragma once
 #include "gameObject.h"
+#include "text.h"
 
 class computer : public gameObject
 {
 protected:
+	text write = text();
 	std::string message = "";
 	bool screenOpened = false;
+	// texture of the opening box
+	GLuint frame = 0;
 
 public:
 	computer();
